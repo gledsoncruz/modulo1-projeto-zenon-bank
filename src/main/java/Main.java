@@ -1,8 +1,11 @@
+import br.com.zenon.ingestor.TransactionIngestor;
 import br.com.zenon.model.Transaction;
 import br.com.zenon.model.TransactionCustomer;
 import br.com.zenon.model.TransactionTypeEnum;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -16,8 +19,15 @@ public class Main {
                 new TransactionCustomer("C873221189", new BigDecimal("6510099.11"), new BigDecimal("7360101.63")), true, false);
 
 
-        IO.println(t1);
-        IO.println(t2);
+//        IO.println(t1);
+//        IO.println(t2);
+
+        IO.println("----------------------------------------");
+
+        TransactionIngestor transactionIngestor = new TransactionIngestor();
+        List<Transaction> transactions = transactionIngestor.read("data/PS_20174392719_1491204439457_log.csv");
+        transactions.forEach(IO::println);
+        IO.println(transactions.size());
 
     }
 
