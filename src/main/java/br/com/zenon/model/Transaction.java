@@ -10,4 +10,16 @@ public record Transaction(
         TransactionCustomer recipient,
         boolean isFraud,
         boolean isFlaggedFraud) {
+
+    public Transaction {
+        if (step <= 0) {
+            throw new IllegalArgumentException(
+                    "step should be positive: " + step);
+        }
+
+        if (amount.signum() < 0) {
+            throw new IllegalArgumentException(
+                    "amount should be positive: " + amount);
+        }
+    }
 }
