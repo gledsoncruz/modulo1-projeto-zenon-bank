@@ -27,7 +27,10 @@ public class Main {
 
         TransactionIngestor transactionIngestor = new TransactionIngestor();
         List<Optional<Transaction>> transactions = transactionIngestor.read(FILE_BAD_DATA_CSV);
-        transactions.forEach(t -> t.ifPresent(IO::println));
+        transactions.stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(IO::println);
         IO.println(transactions.size());
 
     }
