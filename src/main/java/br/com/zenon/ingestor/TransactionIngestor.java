@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class TransactionIngestor {
 
-    public static final int TRANSACTION_LIMIT = 50000;
+    public static final int TRANSACTION_LIMIT = 100_000;
 
     public List<Transaction> read(String filename) {
         Path path = Paths.get(filename);

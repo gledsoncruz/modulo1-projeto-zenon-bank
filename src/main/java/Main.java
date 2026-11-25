@@ -1,10 +1,10 @@
-import br.com.zenon.ingestor.FraudAnalyzer;
 import br.com.zenon.ingestor.TransactionIngestor;
+import br.com.zenon.ingestor.TransactionListRepository;
+import br.com.zenon.ingestor.TransactionMapRepository;
+import br.com.zenon.ingestor.TransactionRepository;
 import br.com.zenon.model.Transaction;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -33,18 +33,47 @@ public class Main {
 //        transactions.forEach(IO::println);
 //        IO.println(transactions.size());
 
-        FraudAnalyzer fraudAnalyzer = new FraudAnalyzer(transactions);
-        IO.println("Total frauds: " + fraudAnalyzer.getCountFrauds());
-        IO.println("Top 3 fraudes de maior valor:");
-        fraudAnalyzer.findHighestValueFrauds(3).forEach(amount -> IO.println("- %.2f".formatted(amount)));
+//        FraudAnalyzer fraudAnalyzer = new FraudAnalyzer(transactions);
+//        IO.println("Total frauds: " + fraudAnalyzer.getCountFrauds());
+//        IO.println("Top 3 fraudes de maior valor:");
+//        fraudAnalyzer.findHighestValueFrauds(3).forEach(amount -> IO.println("- %.2f".formatted(amount)));
+//
+//        IO.println("Clientes Suspeitos:");
+//        fraudAnalyzer.findTopSuspiciousCustomer(5).forEach(IO::println);
+//
+//        IO.println("Prejuízo Total: " + fraudAnalyzer.totalAmountFrauds());
+//
+//        IO.println("5. Fraudes por Tipo:");
+//        fraudAnalyzer.countFraudByType().forEach((key, value) -> IO.println(" - %s: %d".formatted(key, value)));
 
-        IO.println("Clientes Suspeitos:");
-        fraudAnalyzer.findTopSuspiciousCustomer(5).forEach(IO::println);
+        TransactionRepository transactionRepository;
+        transactionRepository = new TransactionListRepository(transactions);
 
-        IO.println("Prejuízo Total: " + fraudAnalyzer.totalAmountFrauds());
+        long startTime = System.nanoTime();
+        Transaction transactionOrigin = transactionRepository
+                .findByOriginName("C1868032458")
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "Transaction not found for origin"
+                ));
+        long endTime = System.nanoTime();
+        IO.println(transactionOrigin);
+        double totalTimeMs = (endTime - startTime) / 1_000_000.0;
+        IO.println("Tempo de busca List em ms: " + totalTimeMs);
 
-        IO.println("5. Fraudes por Tipo:");
-        fraudAnalyzer.countFraudByType().forEach((key, value) -> IO.println(" - %s: %d".formatted(key, value)));
+        transactionRepository = new TransactionMapRepository(transactions);
+
+        startTime = System.nanoTime();
+        transactionOrigin = transactionRepository
+                .findByOriginName("C1868032458")
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Transaction not found for origin"
+                ));
+        endTime = System.nanoTime();
+        IO.println(transactionOrigin);
+        totalTimeMs = (endTime - startTime) / 1_000_000.0;
+        IO.println("Tempo de busca Map em ms: " + totalTimeMs);
+
+
 
     }
 
